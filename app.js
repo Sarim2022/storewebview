@@ -5,8 +5,9 @@
 
 const CONFIG = {
   appName: "NotesInbox",
-  // Change this to your GitHub Releases APK URL later
-  apkUrl: "notesinbox.apk",
+  // APK in the same folder as this page (GitHub Pages)
+  apkUrl: "app-debug.apk",
+  apkFileName: "NotesInbox.apk",
   // Screenshots in appscrenshot/ (Play Store strip)
   screenshots: [
     "appscrenshot/shot-01.png",
@@ -42,30 +43,34 @@ function showToast(message) {
   }, 2200);
 }
 
+function startApkDownload() {
+  const a = document.createElement("a");
+  a.href = CONFIG.apkUrl;
+  a.download = CONFIG.apkFileName;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 function triggerInstall() {
   if (installBtn.classList.contains("installed")) {
-    showToast("Opening NotesInbox…");
+    startApkDownload();
+    showToast("Download started");
     return;
   }
 
   installBtn.textContent = "Downloading…";
   installBtn.disabled = true;
 
-  // Simulate short download, then open APK link
+  // Start APK download immediately (Android Chrome / Safari will save the file)
+  startApkDownload();
+  showToast("Download started");
+
   setTimeout(() => {
     installBtn.disabled = false;
     installBtn.textContent = "Open";
     installBtn.classList.add("installed");
-    showToast("Download started");
-
-    // Attempt APK download (works once file exists / URL is set)
-    const a = document.createElement("a");
-    a.href = CONFIG.apkUrl;
-    a.download = "NotesInbox.apk";
-    a.rel = "noopener";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
   }, 900);
 }
 
